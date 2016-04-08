@@ -89,6 +89,29 @@ $(function(){
         userId: DEFAULT_USER_ID
       };
     },
+    componentDidMount: function() {
+      this.initializeGooglePlacesAutocomplete();
+    },
+    initializeGooglePlacesAutocomplete: function() {
+      var _this = this;
+
+      var input = /** @type {!HTMLInputElement} */(
+        document.getElementById('google-places-search-input'));
+
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+          console.error('Google Places Autocomplete could not find a location :(');
+          return;
+        } else {
+          this.setState({
+            latitude: place.geometry.location.lat(),
+            longitude: place.geometry.location.lng()
+          });
+        }
+      });
+    },
     search: function(event) {
       event.preventDefault();
       var _this = this;
@@ -109,6 +132,13 @@ $(function(){
     render: function() {
       return (
         <form onSubmit={this.search}>
+          <div className="form-group">
+            <label htmlFor="google-places-search-input"> Location </label>
+            <input
+              id="google-places-search-input"
+              className="form-control"
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="latitude"> Latitude </label>
             <input
