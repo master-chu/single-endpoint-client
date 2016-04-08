@@ -5,38 +5,35 @@ $(function(){
     driverId = 1247131032,
     userId = 629178709;
 
-
-  var LocationsTable = React.createClass({
+  var LocationSearch = React.createClass({
     getInitialState: function() {
       return { locations: [] };
     },
     render: function() {
       return (
-        <table className="table">
-          <thead>
-            <tr>
-              <th> Address </th>
-              <th> Distance </th>
-              <th> Vehicles </th>
-            </tr>
-          </thead>
-          <LocationsTableBody locations={this.state.locations} />
-        </table>
+        <div>
+          <LocationSearchForm onSearch={this.handleSearch} />
+          <LocationsTable locations={this.state.locations}/>
+        </div>
       );
     },
-    // called automatically after first render
-    componentDidMount: function() {
-      this.loadLocationsFromServer();
+    handleSearch: function(params) {
+      this.loadLocationsFromServer(params);
     },
-    loadLocationsFromServer: function() {
+    componentDidMount: function() {
+      // called automatically after first render
+      //TODO: Render a "no locations searched" message or something
+    },
+    loadLocationsFromServer: function(params) {
+      console.log('searching...');
       $.ajax({
         url: this.props.url,
         dataType: 'json',
         cache: false,
         type: 'get',
         data: {
-          'latitude': 42.35129149999999,
-          'longitude': -71.0470125,
+          'latitude': params["latitude"],
+          'longitude': params["longitude"],
           'start_time': startTime,
           'end_time': endTime,
           'account_id': accountId,
@@ -55,31 +52,6 @@ $(function(){
     }
   });
 
-  var LocationsTableBody = React.createClass({
-    render: function() {
-      var rows = this.props.locations.map(function(location) {
-        return (
-          <LocationsTableRow address={location.address} distance={location.distance} distance_unit={location.distance_unit}/>
-        );
-      });
-      return (
-        <tbody> {rows} </tbody>
-      );
-    }
-  });
-
-  var LocationsTableRow = React.createClass({
-    render: function() {
-      return (
-        <tr>
-          <td> {this.props.address} </td>
-          <td> {this.props.distance} {this.props.distance_unit} </td>
-          <td> vehicles... </td>
-        </tr>
-      );
-    }
-  });
-
   var LocationSearchForm = React.createClass({
     /*
       "In React, components should always represent the state
@@ -93,13 +65,16 @@ $(function(){
       this.setState({longitude: event.target.value});
     },
     getInitialState: function() {
-      return {latitude: '', longitude: ''};
+      return {latitude: '42.35129149999999', longitude: '-71.0470125'};
     },
     search: function(event) {
       event.preventDefault();
-      console.log("Search:");
-      console.log(this.state.latitude);
-      console.log(this.state.longitude);
+      var latitude = this.state.latitude.trim();
+      var longitude = this.state.longitude.trim();
+      if (!longitude || !latitude) {
+        return;
+      }
+      this.props.onSearch({latitude: latitude, longitude: longitude});
     },
     render: function() {
       return (
@@ -110,7 +85,6 @@ $(function(){
               id="latitude"
               className="form-control"
               type="text"
-              placeholder="42.35129149999999"
               value={this.state.latitude}
               onChange={this.handleLatitudeChange}
             />
@@ -121,7 +95,6 @@ $(function(){
               id="longitude"
               className="form-control"
               type="text"
-              placeholder="-71.0470125"
               value={this.state.longitude}
               onChange={this.handleLongitudeChange}
             />
@@ -132,11 +105,63 @@ $(function(){
     }
   });
 
+  var LocationsTable = React.createClass({
+    render: function() {
+      if (this.props.locations.length > 0) {
+        return (
+          <table className="table">
+            <thead>
+              <tr>
+                <th> Address </th>
+                <th> Distance </th>
+                <th> Vehicles </th>
+              </tr>
+            </thead>
+            <LocationsTableBody locations={this.props.locations} />
+          </table>
+        );
+      } else {
+        return (
+          <div> <br /> No locations to display </div>
+        );
+      }
+    }
+  });
+
+  var LocationsTableBody = React.createClass({
+    render: function() {
+      var rows = this.props.locations.map(function(location) {
+        return (
+          <LocationsTableRow
+            address={location.address}
+            distance={location.distance}
+            distance_unit={location.distance_unit}
+          />
+        );
+      });
+      return (
+        <tbody> {rows} </tbody>
+      );
+    }
+  });
+
+  var LocationsTableRow = React.createClass({
+    formattedDistance: function() {
+      return (Math.round(this.props.distance * 1000) / 1000) + " " + this.props.distance_unit;
+    },
+    render: function() {
+      return (
+        <tr>
+          <td> {this.props.address} </td>
+          <td> {this.formattedDistance()} </td>
+          <td> vehicles... </td>
+        </tr>
+      );
+    }
+  });
+
   ReactDOM.render(
-    <div>
-      <LocationSearchForm />
-      <LocationsTable url="http://localhost:8081/vehicles/nearby"/>
-    </div>,
+    <LocationSearch url="http://localhost:8081/vehicles/nearby" />,
     document.getElementById('entry-point')
   );
 });
