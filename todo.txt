@@ -1,5 +1,6 @@
 HIGH PRIORITY:
 
+  [ ] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
   [ ] Create vehicles and vehicle components
   [ ] iso8016 datepicker (TIMEZONES DUMMY!!!)
   [ ] Move search form to left column of screen
