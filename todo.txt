@@ -1,0 +1,14 @@
+HIGH PRIORITY:
+
+  [ ] Create vehicles and vehicle components
+  [ ] iso8016 datepicker (TIMEZONES DUMMY!!!)
+  [ ] Move search form to left column of screen
+  [ ] Flash messaging
+    [ ] Loading
+    [ ] Searching
+    [ ] Error
+
+CONSIDER:
+
+  [ ] Bound autocomplete geographically for maximum speed (user's location?)
+  [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
