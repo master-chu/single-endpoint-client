@@ -1,9 +1,11 @@
 $(function(){
-  var startTime = '2016-04-20T12:00:00+0000',
-    endTime = '2016-04-20T13:00:00+0000',
-    accountId = 1247133268,
-    driverId = 1247131032,
-    userId = 629178709;
+  var DEFAULT_LATITUDE = '42.35129149999999',
+    DEFAULT_LONGITUDE = '-71.0470125',
+    DEFAULT_START_TIME = '2016-04-20T12:00:00+0000',
+    DEFAULT_END_TIME = '2016-04-20T13:00:00+0000',
+    DEFAULT_ACCOUNT_ID = 1247133268,
+    DEFAULT_DRIVER_ID = 1247131032,
+    DEFAULT_USER_ID = 629178709;
 
   var LocationSearch = React.createClass({
     getInitialState: function() {
@@ -32,15 +34,15 @@ $(function(){
         cache: false,
         type: 'get',
         data: {
-          'latitude': params["latitude"],
-          'longitude': params["longitude"],
-          'start_time': startTime,
-          'end_time': endTime,
-          'account_id': accountId,
-          'driver_id': driverId
+          'latitude': params['latitude'],
+          'longitude': params['longitude'],
+          'start_time': params['startTime'],
+          'end_time': params['endTime'],
+          'account_id': params['accountId'],
+          'driver_id': params['driverId']
         },
         headers: {
-          'Zc-User-Id': userId
+          'Zc-User-Id': params['userId']
         },
         success: function(locations) {
           this.setState({locations: locations});
@@ -64,17 +66,45 @@ $(function(){
     handleLongitudeChange: function(event) {
       this.setState({longitude: event.target.value});
     },
+    handleStartTimeChange: function(event) {
+      this.setState({startTime: event.target.value});
+    },
+    handleEndTimeChange: function(event) {
+      this.setState({endTime: event.target.value});
+    },
+    handleAccountIdhange: function(event) {
+      this.setState({accountId: event.target.value});
+    },
+    handleDriverIdChange: function(event) {
+      this.setState({driverId: event.target.value});
+    },
     getInitialState: function() {
-      return {latitude: '42.35129149999999', longitude: '-71.0470125'};
+      return {
+        latitude: DEFAULT_LATITUDE,
+        longitude: DEFAULT_LONGITUDE,
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME,
+        accountId: DEFAULT_ACCOUNT_ID,
+        driverId: DEFAULT_DRIVER_ID,
+        userId: DEFAULT_USER_ID
+      };
     },
     search: function(event) {
       event.preventDefault();
-      var latitude = this.state.latitude.trim();
-      var longitude = this.state.longitude.trim();
-      if (!longitude || !latitude) {
+      var _this = this;
+
+      var searchKeys = ['latitude', 'longitude', 'startTime', 'endTime', 'accountId', 'driverId'];
+      var searchParams = {};
+      searchKeys.forEach(function(key) {
+        searchParams[key] = _this.state[key];
+      });
+
+      if (searchKeys.some(function(key) { return !searchParams[key]; })) {
+        console.error('Missing at least 1 required search parameter');
         return;
+      } else {
+        this.props.onSearch(searchParams);
       }
-      this.props.onSearch({latitude: latitude, longitude: longitude});
     },
     render: function() {
       return (
@@ -97,6 +127,46 @@ $(function(){
               type="text"
               value={this.state.longitude}
               onChange={this.handleLongitudeChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="start-time"> Start Time </label>
+            <input
+              id="start-time"
+              className="form-control"
+              type="text"
+              value={this.state.startTime}
+              onChange={this.handleStartTimeChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="end-time"> End Time </label>
+            <input
+              id="end-time"
+              className="form-control"
+              type="text"
+              value={this.state.endTime}
+              onChange={this.handleEndTimeChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="account-id"> Account Id </label>
+            <input
+              id="account-id"
+              className="form-control"
+              type="text"
+              value={this.state.accountId}
+              onChange={this.handleAccountIdChange}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="driver-id"> Driver Id </label>
+            <input
+              id="driver-id"
+              className="form-control"
+              type="text"
+              value={this.state.driverId}
+              onChange={this.handleDriverIdChange}
             />
           </div>
           <input className="btn btn-primary" type="submit" value="Search" />
@@ -147,7 +217,7 @@ $(function(){
 
   var LocationsTableRow = React.createClass({
     formattedDistance: function() {
-      return (Math.round(this.props.distance * 1000) / 1000) + " " + this.props.distance_unit;
+      return (Math.round(this.props.distance * 100) / 100) + " " + this.props.distance_unit;
     },
     render: function() {
       return (
