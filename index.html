@@ -7,28 +7,22 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.0/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
 
-    <script src="app.js"></script>
+    <script type="text/babel" src="app.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <h1> Nearby Vehicles </h1>
-      <div id="vehicles-count"></div>
-      <div id="flash">Loading...</div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Address</th>
-            <th>Distance</th>
-            <th>Vehicles</th>
-          </tr>
-        </thead>
-        <tbody id="locations-table-body">
-          <!-- Data goes here -->
-        </tbody>
-      </table>
+      <div id="entry-point">
+        No results yet (loading or otherwise)
+        <!-- React renders here -->
+      </div>
     </div>
   </body>
 </html>
