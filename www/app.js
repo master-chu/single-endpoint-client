@@ -170,7 +170,23 @@ $(function(){
       };
     },
     componentDidMount: function() {
+      this.initializeDateTimePickers();
       this.initializeGooglePlacesAutocomplete();
+    },
+    initializeDateTimePickers: function() {
+      $('#start-time-datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DDTHH:mm:ssZZ'
+      });
+      $('#end-time-datetimepicker').datetimepicker({
+        format: 'YYYY-MM-DDTHH:mm:ssZ',
+        useCurrent: false
+      });
+      $("#start-time-datetimepicker").on("dp.change", function(e) {
+        $('#end-time-datetimepicker').data("DateTimePicker").minDate(e.date);
+      });
+      $("#end-time-datetimepicker").on("dp.change", function(e) {
+        $('#start-time-datetimepicker').data("DateTimePicker").maxDate(e.date);
+      });
     },
     initializeGooglePlacesAutocomplete: function() {
       var _this = this;
@@ -241,23 +257,33 @@ $(function(){
           </div>
           <div className="form-group">
             <label htmlFor="start-time"> Start Time </label>
-            <input
-              id="start-time"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.startTime}
-              onChange={this.handleStartTimeChange}
-            />
+            <div className='input-group date' id='start-time-datetimepicker'>
+              <input
+                id="start-time"
+                className="form-control input-sm"
+                type="text"
+                // value={this.state.startTime}
+                // onChange={this.handleStartTimeChange}
+              />
+              <span className="input-group-addon">
+                <span className="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="end-time"> End Time </label>
-            <input
-              id="end-time"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.endTime}
-              onChange={this.handleEndTimeChange}
-            />
+            <div className='input-group date' id='end-time-datetimepicker'>
+              <input
+                id="end-time"
+                className="form-control input-sm"
+                type="text"
+                // value={this.state.endTime}
+                // onChange={this.handleEndTimeChange}
+              />
+              <span className="input-group-addon">
+                <span className="glyphicon glyphicon-calendar"></span>
+              </span>
+            </div>
           </div>
           <div className="form-group">
             <label htmlFor="account-id"> Account Id </label>

@@ -1,10 +1,10 @@
 HIGH PRIORITY:
 
   [√] Stub fake data for after-hours work
-  [ ] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
-  [ ] Create vehicles and vehicle components
+  [√] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
   [ ] iso8016 datepicker (TIMEZONES DUMMY!!!)
   [ ] Move search form to left column of screen
+  [ ] Create vehicles and vehicle components
   [ ] Flash messaging
     [ ] Loading
     [ ] Searching
