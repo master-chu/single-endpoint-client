@@ -1,4 +1,84 @@
 $(function(){
+  var LOCATIONS_FIXTURE = [
+    {
+      "address": "370 Congress St",
+      "description": "370 Congress St - Residence Inn",
+      "distance": "0.096931432218279557589414352483819570814",
+      "distance_unit": "mi",
+      "latitude": "1234",
+      "longitude": "1234",
+      "location_id": 1706002427,
+      "vehicles": [
+        {
+          "currency_html_entity": "$",
+          "estimated_cost": 75.42,
+          "image_url": "http://127.0.0.1/model_images/135",
+          "location_id": 1706002427,
+          "make": "Honda",
+          "model": "Fit",
+          "name": "Micah",
+          "vehicle_id": 1860411664
+        }
+      ]
+    }, {
+      "address": "2 Center Plaza",
+      "description": "2 Center Plaza",
+      "distance": "0.8008545054",
+      "distance_unit": "mi",
+      "in_communications": true,
+      "latitude": 42.3595659,
+      "location_id": 81343210,
+      "longitude": -71.060189,
+      "vehicles": [
+        {
+          "currency_html_entity": "$",
+          "daily_cost_max": null,
+          "daily_cost_min": null,
+          "dayAvailability": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1",
+          "hourly_cost_max": 3.81,
+          "hourly_cost_min": 3.5,
+          "image_url": "http://127.0.0.1:8081/model_images/19361",
+          "location_id": 81343210,
+          "make": "BMW",
+          "model": "X1",
+          "model_id": 1298956229,
+          "name": "Bendt",
+          "pool_id": 81568710,
+          "unlimited": false,
+          "vehicle_id": 1621700612
+        },
+        {
+          "currency_html_entity": "$",
+          "daily_cost_max": null,
+          "daily_cost_min": null,
+          "dayAvailability": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1",
+          "hourly_cost_max": 3.69,
+          "hourly_cost_min": 3.38,
+          "image_url": "http://127.0.0.1:8081/model_images/58",
+          "location_id": 81343210,
+          "make": "Subaru",
+          "model": "Impreza AWD 5-door",
+          "model_id": 68438186,
+          "name": "Scott G",
+          "pool_id": 81568872,
+          "unlimited": false,
+          "vehicle_id": 1577476714
+        }
+      ]
+    }
+  ];
+
+  var server = new Pretender(function() {
+    this.get('http://localhost:8081/vehicles/nearby', function(request) {
+      return [200, {"Content-Type": "application/json"}, JSON.stringify(LOCATIONS_FIXTURE)]
+    });
+  });
+
+
+  var host = 'http://localhost:8081';
+  // var host = 'http://qaweb1.zipcar.com/api/3.0';
+  var endpointUrl = host + '/vehicles/nearby';
+
   var DEFAULT_LATITUDE = '42.3512914',
     DEFAULT_LONGITUDE = '-71.0470125',
     DEFAULT_START_TIME = '2016-04-20T12:00:00+0000',
@@ -105,7 +185,7 @@ $(function(){
           console.error('Google Places Autocomplete could not find a location :(');
           return;
         } else {
-          this.setState({
+          _this.setState({
             latitude: place.geometry.location.lat(),
             longitude: place.geometry.location.lng()
           });
@@ -136,14 +216,14 @@ $(function(){
             <label htmlFor="google-places-search-input"> Location </label>
             <input
               id="google-places-search-input"
-              className="form-control"
+              className="form-control input-sm"
             />
           </div>
           <div className="form-group">
             <label htmlFor="latitude"> Latitude </label>
             <input
               id="latitude"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.latitude}
               onChange={this.handleLatitudeChange}
@@ -153,7 +233,7 @@ $(function(){
             <label htmlFor="longitude"> Longitude </label>
             <input
               id="longitude"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.longitude}
               onChange={this.handleLongitudeChange}
@@ -163,7 +243,7 @@ $(function(){
             <label htmlFor="start-time"> Start Time </label>
             <input
               id="start-time"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.startTime}
               onChange={this.handleStartTimeChange}
@@ -173,7 +253,7 @@ $(function(){
             <label htmlFor="end-time"> End Time </label>
             <input
               id="end-time"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.endTime}
               onChange={this.handleEndTimeChange}
@@ -183,7 +263,7 @@ $(function(){
             <label htmlFor="account-id"> Account Id </label>
             <input
               id="account-id"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.accountId}
               onChange={this.handleAccountIdChange}
@@ -193,7 +273,7 @@ $(function(){
             <label htmlFor="driver-id"> Driver Id </label>
             <input
               id="driver-id"
-              className="form-control"
+              className="form-control input-sm"
               type="text"
               value={this.state.driverId}
               onChange={this.handleDriverIdChange}
@@ -212,9 +292,9 @@ $(function(){
           <table className="table">
             <thead>
               <tr>
-                <th> Address </th>
-                <th> Distance </th>
-                <th> Vehicles </th>
+                <th> location </th>
+                <th> (count) cars available </th>
+                <th> price </th>
               </tr>
             </thead>
             <LocationsTableBody locations={this.props.locations} />
@@ -232,11 +312,7 @@ $(function(){
     render: function() {
       var rows = this.props.locations.map(function(location) {
         return (
-          <LocationsTableRow
-            address={location.address}
-            distance={location.distance}
-            distance_unit={location.distance_unit}
-          />
+          <LocationsTableRow location={location} />
         );
       });
       return (
@@ -247,13 +323,14 @@ $(function(){
 
   var LocationsTableRow = React.createClass({
     formattedDistance: function() {
-      return (Math.round(this.props.distance * 100) / 100) + " " + this.props.distance_unit;
+      return (Math.round(this.props.location.distance * 100) / 100) + " " + this.props.location.distance_unit;
     },
     render: function() {
+      var location = this.props.location;
       return (
         <tr>
-          <td> {this.props.address} </td>
-          <td> {this.formattedDistance()} </td>
+          <td> {location.address} ({this.formattedDistance()})</td>
+          <td> ??? </td>
           <td> vehicles... </td>
         </tr>
       );
@@ -261,7 +338,7 @@ $(function(){
   });
 
   ReactDOM.render(
-    <LocationSearch url="http://localhost:8081/vehicles/nearby" />,
+    <LocationSearch url={endpointUrl} />,
     document.getElementById('entry-point')
   );
 });

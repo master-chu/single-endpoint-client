@@ -1,5 +1,6 @@
 HIGH PRIORITY:
 
+  [√] Stub fake data for after-hours work
   [ ] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
   [ ] Create vehicles and vehicle components
   [ ] iso8016 datepicker (TIMEZONES DUMMY!!!)
@@ -11,5 +12,10 @@ HIGH PRIORITY:
 
 CONSIDER:
 
+  [ ] Point at staging for after-hours work
+    Getting a 500 and a CORS error... but in the browser i can hit the endpoint (though im unauthorized)
+    [ ] Change host
+    [ ] Generate auth token
+    [ ] Selector for localhost vs staging
   [ ] Bound autocomplete geographically for maximum speed (user's location?)
   [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
