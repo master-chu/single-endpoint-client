@@ -10,14 +10,22 @@ $(function(){
       "location_id": 1706002427,
       "vehicles": [
         {
-          "currency_html_entity": "$",
-          "estimated_cost": 75.42,
-          "image_url": "http://127.0.0.1/model_images/135",
+          "image_url": "http://media.zipcar.com/images/model-image?model_id=1298956229&mode=med",
           "location_id": 1706002427,
           "make": "Honda",
           "model": "Fit",
           "name": "Micah",
-          "vehicle_id": 1860411664
+          "currency_html_entity": "$",
+          "daily_cost_max": null,
+          "daily_cost_min": null,
+          "dayAvailability": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1",
+          "hourly_cost_max": 3.81,
+          "hourly_cost_min": 3.5,
+          "location_id": 81343210,
+          "model_id": 1298956229,
+          "pool_id": 81568710,
+          "unlimited": false,
+          "vehicle_id": 1621700612
         }
       ]
     }, {
@@ -37,7 +45,7 @@ $(function(){
           "dayAvailability": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1",
           "hourly_cost_max": 3.81,
           "hourly_cost_min": 3.5,
-          "image_url": "http://127.0.0.1:8081/model_images/19361",
+          "image_url": "http://media.zipcar.com/images/model-image?model_id=1298956229&mode=med",
           "location_id": 81343210,
           "make": "BMW",
           "model": "X1",
@@ -54,7 +62,7 @@ $(function(){
           "dayAvailability": "1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1",
           "hourly_cost_max": 3.69,
           "hourly_cost_min": 3.38,
-          "image_url": "http://127.0.0.1:8081/model_images/58",
+          "image_url": "http://media.zipcar.com/images/model-image?model_id=68438186&mode=med",
           "location_id": 81343210,
           "make": "Subaru",
           "model": "Impreza AWD 5-door",
@@ -313,20 +321,13 @@ $(function(){
 
   var LocationsTable = React.createClass({
     render: function() {
-      if (this.props.locations.length > 0) {
-        var vehiclesCount = this.vehiclesCount(this.props.locations);
+      var locations = this.props.locations;
+      if (locations.length > 0) {
+        var vehiclesCount = this.vehiclesCount(locations);
         return (
           <div className="col-sm-8">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th> location </th>
-                  <th> {vehiclesCount} cars available </th>
-                  <th> price </th>
-                </tr>
-              </thead>
-              <LocationsTableBody locations={this.props.locations} />
-            </table>
+            <LocationsTableHeader vehiclesCount={vehiclesCount} />
+            <LocationsTableBody locations={locations} />
           </div>
         );
       } else {
@@ -342,6 +343,18 @@ $(function(){
     }
   });
 
+  var LocationsTableHeader = React.createClass({
+    render: function() {
+      return (
+        <div className="row">
+          <div className="col-sm-3"> <strong> location </strong> </div>
+          <div className="col-sm-7"> <strong> {this.props.vehiclesCount} cars available </strong> </div>
+          <div className="col-sm-2"> <strong> price </strong> </div>
+        </div>
+      );
+    }
+  });
+
   var LocationsTableBody = React.createClass({
     render: function() {
       var rows = this.props.locations.map(function(location) {
@@ -350,7 +363,7 @@ $(function(){
         );
       });
       return (
-        <tbody> {rows} </tbody>
+        <div> {rows} </div>
       );
     }
   });
@@ -362,12 +375,47 @@ $(function(){
     render: function() {
       var location = this.props.location;
       return (
-        <tr>
-          <td> {location.address} ({this.formattedDistance()})</td>
-          <td> ??? </td>
-          <td> vehicles... </td>
-        </tr>
+        <div className="row">
+          <div className="col-sm-3"> {location.description} </div>
+          <VehicleRows vehicles={location.vehicles} />
+        </div>
       );
+    },
+  });
+
+  var VehicleRows = React.createClass({
+    render: function() {
+      var vehicleRows = this.props.vehicles.map(function(vehicle) {
+        return (
+          <VehicleRow vehicle={vehicle}/>
+        );
+      });
+      return (
+        <div className="col-sm-9"> {vehicleRows} </div>
+      );
+    }
+  });
+
+  var VehicleRow = React.createClass({
+    render: function() {
+      var vehicle = this.props.vehicle;
+      return (
+        <div className="row">
+          <div className="col-sm-10">
+            <img src={vehicle.image_url} />
+            <span> {vehicle.make} {vehicle.model} {vehicle.name} </span>
+            <br />
+            <span> {vehicle.dayAvailability} </span>
+          </div>
+          <div className="col-sm-2">
+            {this.formattedHourlyCost(vehicle)}
+          </div>
+        </div>
+      );
+    },
+    formattedHourlyCost: function(vehicle) {
+      return vehicle.currency_html_entity + vehicle.hourly_cost_min + " - " +
+        vehicle.currency_html_entity + vehicle.hourly_cost_max + " / day";
     }
   });
 
