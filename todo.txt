@@ -4,7 +4,7 @@ HIGH PRIORITY:
   [√] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
   [√] iso8016 datepicker (TIMEZONES DUMMY!!!)
   [√] Move search form to left column of screen
-  [ ] Vehicles count
+  [√] Vehicles count
   [ ] Create vehicles and vehicle components
   [ ] Smarter defaults
     [ ] Start/End time

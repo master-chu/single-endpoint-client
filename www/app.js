@@ -314,13 +314,14 @@ $(function(){
   var LocationsTable = React.createClass({
     render: function() {
       if (this.props.locations.length > 0) {
+        var vehiclesCount = this.vehiclesCount(this.props.locations);
         return (
           <div className="col-sm-8">
             <table className="table">
               <thead>
                 <tr>
                   <th> location </th>
-                  <th> (count) cars available </th>
+                  <th> {vehiclesCount} cars available </th>
                   <th> price </th>
                 </tr>
               </thead>
@@ -333,6 +334,13 @@ $(function(){
           <div className="col-sm-8"> <br /> No locations to display </div>
         );
       }
+    },
+    vehiclesCount: function(locations) {
+      return locations.reduce(function(acc, location) {
+        return acc + location.vehicles.reduce(function(acc) {
+          return acc + 1;
+        }, 0);
+      }, 0);
     }
   });
 
