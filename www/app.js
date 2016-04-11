@@ -93,7 +93,7 @@ $(function(){
     },
     render: function() {
       return (
-        <div>
+        <div className="row">
           <LocationSearchForm onSearch={this.handleSearch} />
           <LocationsTable locations={this.state.locations}/>
         </div>
@@ -101,10 +101,6 @@ $(function(){
     },
     handleSearch: function(params) {
       this.loadLocationsFromServer(params);
-    },
-    componentDidMount: function() {
-      // called automatically after first render
-      //TODO: Render a "no locations searched" message or something
     },
     loadLocationsFromServer: function(params) {
       console.log('searching...');
@@ -229,86 +225,88 @@ $(function(){
     },
     render: function() {
       return (
-        <form onSubmit={this.search}>
-          <div className="form-group">
-            <label htmlFor="google-places-search-input"> Location </label>
-            <input
-              id="google-places-search-input"
-              className="form-control input-sm"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="latitude"> Latitude </label>
-            <input
-              id="latitude"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.latitude}
-              onChange={this.handleLatitudeChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="longitude"> Longitude </label>
-            <input
-              id="longitude"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.longitude}
-              onChange={this.handleLongitudeChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="start-time"> Start Time </label>
-            <div className='input-group date' id='start-time-datetimepicker'>
+        <div className="col-sm-4">
+          <form onSubmit={this.search}>
+            <div className="form-group">
+              <label htmlFor="google-places-search-input"> Location </label>
               <input
-                id="start-time"
+                id="google-places-search-input"
+                className="form-control input-sm"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="latitude"> Latitude </label>
+              <input
+                id="latitude"
                 className="form-control input-sm"
                 type="text"
-                value={this.state.startTime}
-                onChange={this.handleStartTimeChange}
+                value={this.state.latitude}
+                onChange={this.handleLatitudeChange}
               />
-              <span className="input-group-addon">
-                <span className="glyphicon glyphicon-calendar"></span>
-              </span>
             </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="end-time"> End Time </label>
-            <div className='input-group date' id='end-time-datetimepicker'>
+            <div className="form-group">
+              <label htmlFor="longitude"> Longitude </label>
               <input
-                id="end-time"
+                id="longitude"
                 className="form-control input-sm"
                 type="text"
-                value={this.state.endTime}
-                onChange={this.handleEndTimeChange}
+                value={this.state.longitude}
+                onChange={this.handleLongitudeChange}
               />
-              <span className="input-group-addon">
-                <span className="glyphicon glyphicon-calendar"></span>
-              </span>
             </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="account-id"> Account Id </label>
-            <input
-              id="account-id"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.accountId}
-              onChange={this.handleAccountIdChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="driver-id"> Driver Id </label>
-            <input
-              id="driver-id"
-              className="form-control input-sm"
-              type="text"
-              value={this.state.driverId}
-              onChange={this.handleDriverIdChange}
-            />
-          </div>
-          <input className="btn btn-primary" type="submit" value="Search" />
-        </form>
+            <div className="form-group">
+              <label htmlFor="start-time"> Start Time </label>
+              <div className='input-group date' id='start-time-datetimepicker'>
+                <input
+                  id="start-time"
+                  className="form-control input-sm"
+                  type="text"
+                  value={this.state.startTime}
+                  onChange={this.handleStartTimeChange}
+                />
+                <span className="input-group-addon">
+                  <span className="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="end-time"> End Time </label>
+              <div className='input-group date' id='end-time-datetimepicker'>
+                <input
+                  id="end-time"
+                  className="form-control input-sm"
+                  type="text"
+                  value={this.state.endTime}
+                  onChange={this.handleEndTimeChange}
+                />
+                <span className="input-group-addon">
+                  <span className="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+            </div>
+            <div className="form-group">
+              <label htmlFor="account-id"> Account Id </label>
+              <input
+                id="account-id"
+                className="form-control input-sm"
+                type="text"
+                value={this.state.accountId}
+                onChange={this.handleAccountIdChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="driver-id"> Driver Id </label>
+              <input
+                id="driver-id"
+                className="form-control input-sm"
+                type="text"
+                value={this.state.driverId}
+                onChange={this.handleDriverIdChange}
+              />
+            </div>
+            <input className="btn btn-primary" type="submit" value="Search" />
+          </form>
+        </div>
       );
     }
   });
@@ -317,20 +315,22 @@ $(function(){
     render: function() {
       if (this.props.locations.length > 0) {
         return (
-          <table className="table">
-            <thead>
-              <tr>
-                <th> location </th>
-                <th> (count) cars available </th>
-                <th> price </th>
-              </tr>
-            </thead>
-            <LocationsTableBody locations={this.props.locations} />
-          </table>
+          <div className="col-sm-8">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th> location </th>
+                  <th> (count) cars available </th>
+                  <th> price </th>
+                </tr>
+              </thead>
+              <LocationsTableBody locations={this.props.locations} />
+            </table>
+          </div>
         );
       } else {
         return (
-          <div> <br /> No locations to display </div>
+          <div className="col-sm-8"> <br /> No locations to display </div>
         );
       }
     }

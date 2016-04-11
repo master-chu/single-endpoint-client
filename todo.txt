@@ -3,7 +3,8 @@ HIGH PRIORITY:
   [√] Stub fake data for after-hours work
   [√] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
   [√] iso8016 datepicker (TIMEZONES DUMMY!!!)
-  [ ] Move search form to left column of screen
+  [√] Move search form to left column of screen
+  [ ] Vehicles count
   [ ] Create vehicles and vehicle components
   [ ] Smarter defaults
     [ ] Start/End time
@@ -12,6 +13,8 @@ HIGH PRIORITY:
     [ ] Loading
     [ ] Searching
     [ ] Error
+  [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
+    [ ] Wrapper component called SearchResults containing the map and table
 
 CONSIDER:
 
@@ -21,4 +24,3 @@ CONSIDER:
     [ ] Generate auth token
     [ ] Selector for localhost vs staging
   [ ] Bound autocomplete geographically for maximum speed (user's location?)
-  [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
