@@ -175,10 +175,12 @@ $(function(){
     },
     initializeDateTimePickers: function() {
       $('#start-time-datetimepicker').datetimepicker({
-        format: 'YYYY-MM-DDTHH:mm:ssZZ'
+        format: 'YYYY-MM-DDTHH:mm:ssZZ',
+        stepping: 30
       });
       $('#end-time-datetimepicker').datetimepicker({
-        format: 'YYYY-MM-DDTHH:mm:ssZ',
+        format: 'YYYY-MM-DDTHH:mm:ssZZ',
+        stepping: 30,
         useCurrent: false
       });
       $("#start-time-datetimepicker").on("dp.change", function(e) {
@@ -262,8 +264,8 @@ $(function(){
                 id="start-time"
                 className="form-control input-sm"
                 type="text"
-                // value={this.state.startTime}
-                // onChange={this.handleStartTimeChange}
+                value={this.state.startTime}
+                onChange={this.handleStartTimeChange}
               />
               <span className="input-group-addon">
                 <span className="glyphicon glyphicon-calendar"></span>
@@ -277,8 +279,8 @@ $(function(){
                 id="end-time"
                 className="form-control input-sm"
                 type="text"
-                // value={this.state.endTime}
-                // onChange={this.handleEndTimeChange}
+                value={this.state.endTime}
+                onChange={this.handleEndTimeChange}
               />
               <span className="input-group-addon">
                 <span className="glyphicon glyphicon-calendar"></span>

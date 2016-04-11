@@ -2,9 +2,12 @@ HIGH PRIORITY:
 
   [√] Stub fake data for after-hours work
   [√] Add colors to server messaging (NEED BY JUNE 1st!!!! MAKE OR BREAK ZIPCAR!!!)
-  [ ] iso8016 datepicker (TIMEZONES DUMMY!!!)
+  [√] iso8016 datepicker (TIMEZONES DUMMY!!!)
   [ ] Move search form to left column of screen
   [ ] Create vehicles and vehicle components
+  [ ] Smarter defaults
+    [ ] Start/End time
+    [ ] Location lat/lng
   [ ] Flash messaging
     [ ] Loading
     [ ] Searching
