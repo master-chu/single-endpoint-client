@@ -337,9 +337,7 @@ $(function(){
     },
     vehiclesCount: function(locations) {
       return locations.reduce(function(acc, location) {
-        return acc + location.vehicles.reduce(function(acc) {
-          return acc + 1;
-        }, 0);
+        return acc + location.vehicles.length;
       }, 0);
     }
   });
