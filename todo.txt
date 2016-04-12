@@ -5,7 +5,7 @@ HIGH PRIORITY:
   [√] iso8016 datepicker (TIMEZONES DUMMY!!!)
   [√] Move search form to left column of screen
   [√] Vehicles count
-  [ ] Create vehicles and vehicle components
+  [√] Create vehicles and vehicle components
   [ ] Smarter defaults
     [ ] Start/End time
     [ ] Location lat/lng

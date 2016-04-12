@@ -1,3 +1,6 @@
+body {
+  padding: 10px;
+}
 td.location-name {
   max-width: 100px;
 }

@@ -394,7 +394,7 @@ $(function(){
 
       if (this.props.index === 0) {
         dataCells.unshift(
-          <td className="chris" rowSpan={this.props.rowSpan}>
+          <td className="location-name" rowSpan={this.props.rowSpan}>
             {this.props.locationName}
           </td>
         );
