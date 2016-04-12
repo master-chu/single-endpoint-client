@@ -24,7 +24,7 @@ $(function(){
           "location_id": 81343210,
           "model_id": 1298956229,
           "pool_id": 81568710,
-          "unlimited": false,
+          "unlimited": true,
           "vehicle_id": 1621700612
         }
       ]
@@ -326,8 +326,16 @@ $(function(){
         var vehiclesCount = this.vehiclesCount(locations);
         return (
           <div className="col-sm-8">
-            <LocationsTableHeader vehiclesCount={vehiclesCount} />
-            <LocationsTableBody locations={locations} />
+            <table className="table">
+              <thead>
+                <tr>
+                  <th> location </th>
+                  <th> {vehiclesCount} cars returned </th>
+                  <th> price </th>
+                </tr>
+              </thead>
+              <LocationsTableBody locations={locations} />
+            </table>
           </div>
         );
       } else {
@@ -343,55 +351,21 @@ $(function(){
     }
   });
 
-  var LocationsTableHeader = React.createClass({
-    render: function() {
-      return (
-        <div className="row">
-          <div className="col-sm-3"> <strong> location </strong> </div>
-          <div className="col-sm-7"> <strong> {this.props.vehiclesCount} cars available </strong> </div>
-          <div className="col-sm-2"> <strong> price </strong> </div>
-        </div>
-      );
-    }
-  });
-
   var LocationsTableBody = React.createClass({
     render: function() {
-      var rows = this.props.locations.map(function(location) {
-        return (
-          <LocationsTableRow location={location} />
-        );
-      });
-      return (
-        <div> {rows} </div>
-      );
-    }
-  });
+      var allVehicleRows = this.props.locations.reduce(function(acc, location) {
+        var vehicles = location.vehicles.map(function(vehicle) {
+          return (
+            <VehicleRow vehicle={vehicle} locationName={location.description} />
+          );
+        })
+        return acc.concat(vehicles);
+      }, []);
 
-  var LocationsTableRow = React.createClass({
-    formattedDistance: function() {
-      return (Math.round(this.props.location.distance * 100) / 100) + " " + this.props.location.distance_unit;
-    },
-    render: function() {
-      var location = this.props.location;
       return (
-        <div className="row">
-          <div className="col-sm-3"> {location.description} </div>
-          <VehicleRows vehicles={location.vehicles} />
-        </div>
-      );
-    },
-  });
-
-  var VehicleRows = React.createClass({
-    render: function() {
-      var vehicleRows = this.props.vehicles.map(function(vehicle) {
-        return (
-          <VehicleRow vehicle={vehicle}/>
-        );
-      });
-      return (
-        <div className="col-sm-9"> {vehicleRows} </div>
+        <tbody>
+          {allVehicleRows}
+        </tbody>
       );
     }
   });
@@ -400,18 +374,20 @@ $(function(){
     render: function() {
       var vehicle = this.props.vehicle;
       return (
-        <div className="row">
-          <div className="col-sm-10">
+        <tr>
+          <td> {this.props.locationName} </td>
+          <td>
             <img src={vehicle.image_url} />
-            <span> {vehicle.make} {vehicle.model} {vehicle.name} </span>
-            <br />
-            <span> {vehicle.dayAvailability} </span>
-          </div>
-          <div className="col-sm-2">
+            {this.fullName(vehicle)}
+          </td>
+          <td>
             {this.formattedHourlyCost(vehicle)}
-          </div>
-        </div>
+          </td>
+        </tr>
       );
+    },
+    fullName: function(vehicle) {
+      return vehicle.make + " " + vehicle.model + " " + vehicle.name;
     },
     formattedHourlyCost: function(vehicle) {
       return vehicle.currency_html_entity + vehicle.hourly_cost_min + " - " +
