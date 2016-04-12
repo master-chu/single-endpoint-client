@@ -235,7 +235,7 @@ $(function(){
     },
     render: function() {
       return (
-        <div className="col-sm-4">
+        <div className="col-sm-3">
           <form onSubmit={this.search}>
             <div className="form-group">
               <label htmlFor="google-places-search-input"> Location </label>
@@ -327,8 +327,8 @@ $(function(){
       if (locations.length > 0) {
         var vehiclesCount = this.vehiclesCount(locations);
         return (
-          <div className="col-sm-8">
-            <table className="table">
+          <div className="col-sm-9">
+            <table className="table table-bordered">
               <thead>
                 <tr>
                   <th> location </th>
@@ -342,7 +342,7 @@ $(function(){
         );
       } else {
         return (
-          <div className="col-sm-8"> <br /> No locations to display </div>
+          <div className="col-sm-9"> <br /> No locations to display </div>
         );
       }
     },
@@ -356,9 +356,14 @@ $(function(){
   var LocationsTableBody = React.createClass({
     render: function() {
       var allVehicleRows = this.props.locations.reduce(function(acc, location) {
-        var vehicles = location.vehicles.map(function(vehicle) {
+        var vehicles = location.vehicles.map(function(vehicle, index) {
           return (
-            <VehicleRow vehicle={vehicle} locationName={location.description} />
+            <VehicleRow
+              vehicle={vehicle}
+              locationName={location.description}
+              index={index}
+              rowSpan={location.vehicles.length}
+            />
           );
         })
         return acc.concat(vehicles);
@@ -375,25 +380,51 @@ $(function(){
   var VehicleRow = React.createClass({
     render: function() {
       var vehicle = this.props.vehicle;
+      var dataCells = [
+        <td>
+          <img src={this.formattedImage(vehicle.image_url)} />
+          {this.fullName(vehicle)}
+        </td>,
+        <td>
+          {this.formattedHourlyCost(vehicle)}
+          <br />
+          {this.formattedDailyCost(vehicle)}
+        </td>
+      ];
+
+      if (this.props.index === 0) {
+        dataCells.unshift(
+          <td className="chris" rowSpan={this.props.rowSpan}>
+            {this.props.locationName}
+          </td>
+        );
+      }
+
       return (
         <tr>
-          <td> {this.props.locationName} </td>
-          <td>
-            <img src={this.formattedImage(vehicle.image_url)} />
-            {this.fullName(vehicle)}
-          </td>
-          <td>
-            {this.formattedHourlyCost(vehicle)}
-          </td>
+          {dataCells}
         </tr>
       );
     },
     fullName: function(vehicle) {
-      return vehicle.make + " " + vehicle.model + " " + vehicle.name;
+      var oneWay = vehicle.unlimited ? "(one-way)" : "";
+      return vehicle.make + " " + vehicle.model + " " + vehicle.name + " " + oneWay;
     },
     formattedHourlyCost: function(vehicle) {
-      return vehicle.currency_html_entity + vehicle.hourly_cost_min + " - " +
-        vehicle.currency_html_entity + vehicle.hourly_cost_max + " / day";
+      return this.formattedCost(vehicle, "hour");
+    },
+    formattedDailyCost: function(vehicle) {
+      return this.formattedCost(vehicle, "day");
+    },
+    formattedCost: function(vehicle, lengthOfTime) {
+      var min = lengthOfTime === "day" ? vehicle.daily_cost_min : vehicle.hourly_cost_min;
+      var max = lengthOfTime === "day" ? vehicle.daily_cost_max : vehicle.hourly_cost_max;
+      var symbol = vehicle.currency_html_entity;
+      var result = symbol.concat(min);
+      if (min !== max) {
+        result.concat(" - " + symbol + max);
+      }
+      return result.concat(" / " + lengthOfTime);
     },
     formattedImage: function(image_url) {
       return image_url.replace('http://localhost:8081', 'http://qaweb1.zipcar.com').
