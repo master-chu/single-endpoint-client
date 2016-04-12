@@ -76,11 +76,11 @@ $(function(){
     }
   ];
 
-  var server = new Pretender(function() {
-    this.get('http://localhost:8081/vehicles/nearby', function(request) {
-      return [200, {"Content-Type": "application/json"}, JSON.stringify(LOCATIONS_FIXTURE)]
-    });
-  });
+  // var server = new Pretender(function() {
+  //   this.get('http://localhost:8081/vehicles/nearby', function(request) {
+  //     return [200, {"Content-Type": "application/json"}, JSON.stringify(LOCATIONS_FIXTURE)]
+  //   });
+  // });
 
 
   var host = 'http://localhost:8081';
@@ -93,7 +93,7 @@ $(function(){
     DEFAULT_END_TIME = '2016-04-20T13:00:00+0000',
     DEFAULT_ACCOUNT_ID = 1247133268,
     DEFAULT_DRIVER_ID = 1247131032,
-    DEFAULT_USER_ID = 629178709;
+    DEFAULT_USER_ID = 1181079380;
 
   var LocationSearch = React.createClass({
     getInitialState: function() {
@@ -112,6 +112,7 @@ $(function(){
     },
     loadLocationsFromServer: function(params) {
       console.log('searching...');
+      params['userId'] = params['userId'] || DEFAULT_USER_ID;
       $.ajax({
         url: this.props.url,
         dataType: 'json',
@@ -129,6 +130,7 @@ $(function(){
           'Zc-User-Id': params['userId']
         },
         success: function(locations) {
+          console.log('search completed');
           this.setState({locations: locations});
         }.bind(this),
         error: function(xhr, status, err) {
@@ -377,7 +379,7 @@ $(function(){
         <tr>
           <td> {this.props.locationName} </td>
           <td>
-            <img src={vehicle.image_url} />
+            <img src={this.formattedImage(vehicle.image_url)} />
             {this.fullName(vehicle)}
           </td>
           <td>
@@ -392,6 +394,10 @@ $(function(){
     formattedHourlyCost: function(vehicle) {
       return vehicle.currency_html_entity + vehicle.hourly_cost_min + " - " +
         vehicle.currency_html_entity + vehicle.hourly_cost_max + " / day";
+    },
+    formattedImage: function(image_url) {
+      return image_url.replace('http://localhost:8081', 'http://qaweb1.zipcar.com').
+        concat('&mode=med');
     }
   });
 
