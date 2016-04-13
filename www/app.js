@@ -1,4 +1,7 @@
 $(function(){
+  /*==================================*\
+  |         Stubbing fixtures          |
+  \*==================================*/
   // var LOCATIONS_FIXTURE = [
   //   {
   //     "address": "370 Congress St",
@@ -82,23 +85,31 @@ $(function(){
   //   });
   // });
 
-
+  /*==================================*\
+  |     Configure network settings     |
+  \*==================================*/
   var host = 'http://localhost:8081';
   // var host = 'http://qaweb1.zipcar.com/api/3.0';
   var endpointUrl = host + '/vehicles/nearby';
 
+  /*==================================*\
+  |         Configure defaults         |
+  \*==================================*/
+  var DEFAULT_LATITUDE = '42.3512914';
+  var DEFAULT_LONGITUDE = '-71.0470125';
+
   var now = moment();
   var lastHalfHour = now.startOf('hour').add((now.minutes >= 30 ? 30 : 0), 'm');
+  var DEFAULT_START_TIME = lastHalfHour.format('YYYY-MM-DDTHH:mm:ssZZ');
+  var DEFAULT_END_TIME = lastHalfHour.add(1, 'h').format('YYYY-MM-DDTHH:mm:ssZZ');
 
-  var DEFAULT_LATITUDE = '42.3512914',
-    DEFAULT_LONGITUDE = '-71.0470125',
-    DEFAULT_START_TIME = lastHalfHour.format('YYYY-MM-DDTHH:mm:ssZZ'),
-    DEFAULT_END_TIME = lastHalfHour.add(1, 'h').format('YYYY-MM-DDTHH:mm:ssZZ'),
-    DEFAULT_ACCOUNT_ID = 1247133268,
-    DEFAULT_DRIVER_ID = 1247131032,
-    DEFAULT_FLEXIBLE = false,
-    DEFAULT_USER_ID = 1181079380;
-
+  var DEFAULT_ACCOUNT_ID = 1247133268;
+  var DEFAULT_DRIVER_ID = 1247131032;
+  var DEFAULT_FLEXIBLE = false;
+  var DEFAULT_USER_ID = 1181079380;
+  /*==================================*\
+  |          React Components          |
+  \*==================================*/
   var FlashMessages = React.createClass({
     render: function() {
       var messages = this.props.messages;
@@ -132,7 +143,11 @@ $(function(){
 
   var LoadingSpinner = React.createClass({
     render: function() {
-      return (<div> Loading... </div>);
+      return (
+        <div>
+          Searching... <img width='25px' height='25px' src='gifs/sonic_right.gif' />
+        </div>
+      );
     }
   });
 
@@ -261,6 +276,7 @@ $(function(){
     componentDidMount: function() {
       // this.initializeDateTimePickers();
       this.initializeGooglePlacesAutocomplete();
+      this.initializeUserGeolocation();
     },
     initializeDateTimePickers: function() {
       $('#start-time-datetimepicker').datetimepicker({
@@ -300,6 +316,15 @@ $(function(){
             longitude: place.geometry.location.lng()
           });
         }
+      });
+    },
+    initializeUserGeolocation: function() {
+      var _this = this;
+      navigator.geolocation.getCurrentPosition(function(position) {
+        _this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
       });
     },
     pushFlashMessage: function(message) {
