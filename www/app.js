@@ -353,11 +353,11 @@ $(function(){
       }
     },
     render: function() {
-      var submitButton;
+      var searchButtonClassNames = "btn btn-primary";
+      var searchButtonText = "Search";
       if (this.props.isSearching) {
-        submitButton = <input className="btn btn-primary disabled" type="submit" value="Searching..." />;
-      } else {
-        submitButton = <input className="btn btn-primary" type="submit" value="Search" />;
+        searchButtonClassNames += " disabled";
+        searchButtonText += "ing...";
       }
 
       return (
@@ -440,7 +440,12 @@ $(function(){
                 &nbsp;my time is flexible
               </label>
             </div>
-            {submitButton}
+            <input
+              id="search-button"
+              className={searchButtonClassNames}
+              type="submit"
+              value={searchButtonText}
+            />
           </form>
         </div>
       );
@@ -494,7 +499,7 @@ $(function(){
           return (
             <VehicleRow
               vehicle={vehicle}
-              locationName={location.description}
+              location={location}
               index={index}
               rowSpan={location.vehicles.length}
             />
@@ -511,13 +516,34 @@ $(function(){
     }
   });
 
+  var LocationDataCell = React.createClass({
+    render: function() {
+      var location = this.props.location;
+      return (
+        <td className="location-name" rowSpan={this.props.rowSpan}>
+          <label>
+            {location.address}
+          </label>
+          <br />
+          {location.description}
+          <span className='location-distance'>
+            &nbsp;({this.formattedDistance()})
+          </span>
+        </td>
+      );
+    },
+    formattedDistance: function() {
+      return (Math.round(this.props.location.distance * 100) / 100) + " " + this.props.location.distance_unit;
+    }
+  })
+
   var VehicleRow = React.createClass({
     render: function() {
       var vehicle = this.props.vehicle;
       var dataCells = [
         <td>
           <img src={this.formattedImage(vehicle.image_url)} />
-          {this.fullName(vehicle)}
+          <span className="vehicle-full-name"> {this.fullName(vehicle)} </span>
         </td>,
         <td>
           {this.formattedHourlyCost(vehicle)}
@@ -528,9 +554,7 @@ $(function(){
 
       if (this.props.index === 0) {
         dataCells.unshift(
-          <td className="location-name" rowSpan={this.props.rowSpan}>
-            {this.props.locationName}
-          </td>
+          <LocationDataCell location={this.props.location} rowSpan={this.props.rowSpan} />
         );
       }
 
@@ -541,8 +565,8 @@ $(function(){
       );
     },
     fullName: function(vehicle) {
-      var oneWay = vehicle.unlimited ? "(one-way)" : "";
-      return vehicle.make + " " + vehicle.model + " " + vehicle.name + " " + oneWay;
+      var oneWay = vehicle.unlimited ? '(one-way)' : '';
+      return vehicle.make + ' ' + vehicle.model + ' "' + vehicle.name + '" ' + oneWay;
     },
     formattedHourlyCost: function(vehicle) {
       return this.formattedCost(vehicle, "hour");

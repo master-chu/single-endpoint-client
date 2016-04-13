@@ -1,0 +1,21 @@
+@font-face {
+    font-family: "DINFamily";
+    src: url("http://dru-cdn.zipcar.com/sites/all/fonts/DINWebPro.woff") format('woff');
+}
+
+@font-face {
+    font-family: "DINFamilyBold";
+    src: url("http://dru-cdn.zipcar.com/sites/all/fonts/DINWebPro-Bold.woff") format('woff');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "din-medium";
+    src: url("http://dru-cdn.zipcar.com/sites/all/fonts/DINWebPro-Medium.woff") format('woff');
+}
+
+
+@font-face {
+    font-family: "din-condensed";
+    src: url("http://dru-cdn.zipcar.com/sites/all/fonts/DINWebPro-CondMedium.woff") format('woff');
+}

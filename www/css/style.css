@@ -1,0 +1,46 @@
+body {
+  font-family: DINFamily;
+  color: #333;
+}
+
+#entry-point {
+  padding: 15px;
+}
+
+label {
+  font-family: DINFamilyBold;
+  color: #696A6C;
+}
+
+.vehicle-full-name {
+  font-family: DINFamilyBold;
+}
+
+h1 {
+  color: white;
+  background-color: #53575a;
+  font-family: "din-condensed";
+  margin: 0;
+  padding: 10px;
+  padding-bottom: 3px;
+}
+
+h1 small {
+  color: #B3B3B3;
+}
+
+.flash-message {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+td.location-name {
+  max-width: 150px;
+}
+
+#search-button {
+  background-color: #F58025;
+  border-color: #F58025;
+  width: 100%;
+}
