@@ -12,7 +12,7 @@ label {
   color: #696A6C;
 }
 
-.vehicle-full-name {
+.vehicle-full-name, #search-button, th {
   font-family: DINFamilyBold;
 }
 
@@ -33,6 +33,11 @@ h1 small {
   padding: 10px;
   border-radius: 5px;
   margin-bottom: 5px;
+}
+
+th {
+  background-color: #E4E4E4;
+  color: #878B8E;
 }
 
 td.location-name {

@@ -6,13 +6,13 @@ HIGH PRIORITY:
   [√] Move search form to left column of screen
   [√] Vehicles count
   [√] Create vehicles and vehicle components
-  [ ] Smarter defaults
-    [ ] Start/End time
-    [ ] Location lat/lng
+  [√] Smarter defaults
+    [√] Start/End time
+    [√] Location lat/lng
   [√] Flash messaging
     [√] Error
     [ ] Loading
-    [ ] Searching
+    [√] Searching
   [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
     [ ] Wrapper component called SearchResults containing the map and table
 
