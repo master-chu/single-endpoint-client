@@ -328,6 +328,13 @@ $(function(){
       }
     },
     render: function() {
+      var submitButton;
+      if (this.props.isSearching) {
+        submitButton = <input className="btn btn-primary disabled" type="submit" value="Searching..." />;
+      } else {
+        submitButton = <input className="btn btn-primary" type="submit" value="Search" />;
+      }
+
       return (
         <div className="col-sm-3">
           <form onSubmit={this.search}>
@@ -408,7 +415,7 @@ $(function(){
                 &nbsp;my time is flexible
               </label>
             </div>
-            <input className="btn btn-primary" type="submit" value="Search" />
+            {submitButton}
           </form>
         </div>
       );
