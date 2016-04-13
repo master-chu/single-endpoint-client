@@ -40,12 +40,25 @@ th {
   color: #878B8E;
 }
 
-td.location-name {
-  max-width: 150px;
+td.location {
+  max-width: 125px;
+}
+
+.location-address {
+  color: rgb(79, 166, 0);
+}
+
+.vehicle-full-name a {
+  color: #F58025;
 }
 
 #search-button {
   background-color: #F58025;
   border-color: #F58025;
   width: 100%;
+}
+
+.tooltip {
+  white-space: pre-wrap;
+  text-align: left;
 }

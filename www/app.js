@@ -520,30 +520,65 @@ $(function(){
     render: function() {
       var location = this.props.location;
       return (
-        <td className="location-name" rowSpan={this.props.rowSpan}>
+        <td className="location" rowSpan={this.props.rowSpan}>
           <label>
-            {location.address}
+            <a
+              className="location-address"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={this.tooltipText(location)}
+            >
+              {location.address}
+            </a>
           </label>
           <br />
           {location.description}
           <span className='location-distance'>
-            &nbsp;({this.formattedDistance()})
+            &nbsp;({this.formattedDistance(location)})
           </span>
         </td>
       );
     },
-    formattedDistance: function() {
-      return (Math.round(this.props.location.distance * 100) / 100) + " " + this.props.location.distance_unit;
+    formattedDistance: function(location) {
+      return (Math.round(location.distance * 100) / 100) + " " + location.distance_unit;
+    },
+    tooltipText: function(location) {
+      return 'location_id: ' + location.location_id + '\n' +
+        'latitude: ' + location.latitude + '\n' +
+        'longitude: ' + location.longitude + '\n' +
+        'distance: ' + location.distance + ' ' + location.distance_unit + '\n' +
+        'timezone: ' + location.timezone + '\n' +
+        'in_communications: ' + location.in_communications;
     }
   })
 
   var VehicleRow = React.createClass({
+    componentDidMount: function() {
+      this.enableTooltips();
+    },
+    enableTooltips: function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    },
+    tooltipText: function(vehicle) {
+      return 'vehicle_id: ' + vehicle.vehicle_id + '\n' +
+        'pool_id: ' + vehicle.pool_id + '\n' +
+        'model_id: ' + vehicle.model_id + '\n' +
+        'currency_html_entity: ' + vehicle.currency_html_entity + '\n';
+    },
     render: function() {
       var vehicle = this.props.vehicle;
       var dataCells = [
         <td>
           <img src={this.formattedImage(vehicle.image_url)} />
-          <span className="vehicle-full-name"> {this.fullName(vehicle)} </span>
+          <span className="vehicle-full-name">
+            <a
+              data-toggle="tooltip"
+              data-placement="top"
+              title={this.tooltipText(vehicle)}
+            >
+              {this.fullName(vehicle)}
+            </a>
+          </span>
         </td>,
         <td>
           {this.formattedHourlyCost(vehicle)}
