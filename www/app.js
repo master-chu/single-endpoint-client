@@ -87,10 +87,13 @@ $(function(){
   // var host = 'http://qaweb1.zipcar.com/api/3.0';
   var endpointUrl = host + '/vehicles/nearby';
 
+  var now = moment();
+  var lastHalfHour = now.startOf('hour').add((now.minutes >= 30 ? 30 : 0), 'm');
+
   var DEFAULT_LATITUDE = '42.3512914',
     DEFAULT_LONGITUDE = '-71.0470125',
-    DEFAULT_START_TIME = '2016-04-20T12:00:00+0000',
-    DEFAULT_END_TIME = '2016-04-20T13:00:00+0000',
+    DEFAULT_START_TIME = lastHalfHour.format('YYYY-MM-DDTHH:mm:ssZZ'),
+    DEFAULT_END_TIME = lastHalfHour.add(1, 'h').format('YYYY-MM-DDTHH:mm:ssZZ'),
     DEFAULT_ACCOUNT_ID = 1247133268,
     DEFAULT_DRIVER_ID = 1247131032,
     DEFAULT_FLEXIBLE = false,
@@ -127,11 +130,18 @@ $(function(){
     }
   });
 
+  var LoadingSpinner = React.createClass({
+    render: function() {
+      return (<div> Loading... </div>);
+    }
+  });
+
   var LocationSearch = React.createClass({
     getInitialState: function() {
       return {
         locations: [],
-        flashMessages: []
+        flashMessages: [],
+        isSearching: false
       };
     },
     render: function() {
@@ -144,13 +154,18 @@ $(function(){
             <LocationSearchForm
               onSearch={this.handleSearch}
               onPushFlashMessage={this.handlePushFlashMessage}
+              isSearching={this.state.isSearching}
             />
-            <LocationsTable locations={this.state.locations}/>
+            <LocationsTable
+              locations={this.state.locations}
+              isSearching={this.state.isSearching}
+            />
           </div>
         </div>
       );
     },
     handleSearch: function(params) {
+      this.setState({isSearching: true});
       this.loadLocationsFromServer(params);
     },
     handlePushFlashMessage: function(message) {
@@ -189,6 +204,7 @@ $(function(){
         success: function(locations) {
           console.log('search completed');
           this.setState({locations: locations});
+          this.setState({isSearching: false});
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(this.props.url, status, err.toString());
@@ -196,6 +212,8 @@ $(function(){
             content: [this.props.url, status, err.toString()].join(" "),
             className: 'danger'
           });
+          this.setState({locations: []});
+          this.setState({isSearching: false});
         }.bind(this)
       });
     }
@@ -241,7 +259,7 @@ $(function(){
       };
     },
     componentDidMount: function() {
-      this.initializeDateTimePickers();
+      // this.initializeDateTimePickers();
       this.initializeGooglePlacesAutocomplete();
     },
     initializeDateTimePickers: function() {
@@ -300,7 +318,10 @@ $(function(){
       });
 
       if (requiredSearchKeys.some(function(key) { return !searchParams[key]; })) {
-        console.error('Missing at least 1 required search parameter');
+        this.pushFlashMessage({
+          content: 'Missing at least 1 required search parameter',
+          className: 'danger'
+        });
         return;
       } else {
         this.props.onSearch(searchParams);
@@ -339,33 +360,23 @@ $(function(){
             </div>
             <div className="form-group">
               <label htmlFor="start-time"> Start Time </label>
-              <div className='input-group date' id='start-time-datetimepicker'>
-                <input
-                  id="start-time"
-                  className="form-control input-sm"
-                  type="text"
-                  value={this.state.startTime}
-                  onChange={this.handleStartTimeChange}
-                />
-                <span className="input-group-addon">
-                  <span className="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
+              <input
+                id="start-time"
+                className="form-control input-sm"
+                type="text"
+                value={this.state.startTime}
+                onChange={this.handleStartTimeChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="end-time"> End Time </label>
-              <div className='input-group date' id='end-time-datetimepicker'>
-                <input
-                  id="end-time"
-                  className="form-control input-sm"
-                  type="text"
-                  value={this.state.endTime}
-                  onChange={this.handleEndTimeChange}
-                />
-                <span className="input-group-addon">
-                  <span className="glyphicon glyphicon-calendar"></span>
-                </span>
-              </div>
+              <input
+                id="end-time"
+                className="form-control input-sm"
+                type="text"
+                value={this.state.endTime}
+                onChange={this.handleEndTimeChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="account-id"> Account Id </label>
@@ -407,27 +418,35 @@ $(function(){
   var LocationsTable = React.createClass({
     render: function() {
       var locations = this.props.locations;
-      if (locations.length > 0) {
+      var table;
+
+      if (this.props.isSearching) {
+        table = (
+          <LoadingSpinner />
+        );
+      } else if (locations.length > 0) {
         var vehiclesCount = this.vehiclesCount(locations);
-        return (
-          <div className="col-sm-9">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th> location </th>
-                  <th> {vehiclesCount} cars returned </th>
-                  <th> price </th>
-                </tr>
-              </thead>
-              <LocationsTableBody locations={locations} />
-            </table>
-          </div>
+        table = (
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th> location </th>
+                <th> {vehiclesCount} cars returned </th>
+                <th> price </th>
+              </tr>
+            </thead>
+            <LocationsTableBody locations={locations} />
+          </table>
         );
       } else {
-        return (
-          <div className="col-sm-9"> <br /> No locations to display </div>
+        table = (
+          <span> No locations to display </span>
         );
       }
+
+      return (
+        <div className="col-sm-9"> {table} </div>
+      );
     },
     vehiclesCount: function(locations) {
       return locations.reduce(function(acc, location) {

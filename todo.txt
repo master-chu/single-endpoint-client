@@ -9,10 +9,10 @@ HIGH PRIORITY:
   [ ] Smarter defaults
     [ ] Start/End time
     [ ] Location lat/lng
-  [ ] Flash messaging
+  [√] Flash messaging
+    [√] Error
     [ ] Loading
     [ ] Searching
-    [ ] Error
   [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
     [ ] Wrapper component called SearchResults containing the map and table
 
