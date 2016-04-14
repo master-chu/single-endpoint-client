@@ -13,8 +13,8 @@ HIGH PRIORITY:
     [√] Error
     [ ] Loading
     [√] Searching
-  [ ] Display a map of the vehicles, thus cementing reservejs's obsolescence
-    [ ] Wrapper component called SearchResults containing the map and table
+  [√] Display a map of the vehicles, thus cementing reservejs's obsolescence
+    [√] Wrapper component called SearchResults containing the map and table
 
 CONSIDER:
 

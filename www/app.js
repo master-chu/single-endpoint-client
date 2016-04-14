@@ -495,9 +495,11 @@ $(function(){
       this.drawLocationMarkers();
     },
     componentDidUpdate: function() {
-      this.clearAllMarkers();
-      this.drawLocationMarkers();
-      this.recenterMap();
+      if (this.props.locations.length > 0) {
+        this.clearAllMarkers();
+        this.drawLocationMarkers();
+        this.recenterMap();
+      }
     },
     initializeGoogleMapState: function() {
       /* These represent state that we don't want
