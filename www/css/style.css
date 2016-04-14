@@ -62,3 +62,11 @@ td.location {
   white-space: pre-wrap;
   text-align: left;
 }
+
+html, body {
+  height: 100%;
+}
+
+#locations-map {
+  height: 300px;
+}

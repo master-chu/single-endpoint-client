@@ -107,6 +107,7 @@ $(function(){
   var DEFAULT_DRIVER_ID = 1247131032;
   var DEFAULT_FLEXIBLE = false;
   var DEFAULT_USER_ID = 1181079380;
+
   /*==================================*\
   |          React Components          |
   \*==================================*/
@@ -171,7 +172,7 @@ $(function(){
               onPushFlashMessage={this.handlePushFlashMessage}
               isSearching={this.state.isSearching}
             />
-            <LocationsTable
+            <LocationSearchResults
               locations={this.state.locations}
               isSearching={this.state.isSearching}
             />
@@ -452,7 +453,7 @@ $(function(){
     }
   });
 
-  var LocationsTable = React.createClass({
+  var LocationSearchResults = React.createClass({
     render: function() {
       var locations = this.props.locations;
       var table;
@@ -462,18 +463,8 @@ $(function(){
           <LoadingSpinner />
         );
       } else if (locations.length > 0) {
-        var vehiclesCount = this.vehiclesCount(locations);
         table = (
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th> location </th>
-                <th> {vehiclesCount} cars returned </th>
-                <th> price </th>
-              </tr>
-            </thead>
-            <LocationsTableBody locations={locations} />
-          </table>
+          <LocationsTable locations={locations} />
         );
       } else {
         table = (
@@ -482,7 +473,90 @@ $(function(){
       }
 
       return (
-        <div className="col-sm-9"> {table} </div>
+        <div className="col-sm-9">
+          <div id="locations-map-wrapper" class="row">
+            <LocationsMap locations={locations} />
+          </div>
+          <div class="row">
+            {table}
+          </div>
+        </div>
+      );
+    }
+  });
+
+  var LocationsMap = React.createClass({
+    render: function() {
+      return (<div id="locations-map"></div>);
+    },
+    componentDidMount: function() {
+      this.initializeGoogleMap();
+      this.initializeGoogleMapState();
+      this.drawLocationMarkers();
+    },
+    componentDidUpdate: function() {
+      this.clearAllMarkers();
+      this.drawLocationMarkers();
+      this.recenterMap();
+    },
+    initializeGoogleMapState: function() {
+      /* These represent state that we don't want
+         detected by react, since they operate in
+         their own event model and because reasons */
+      this.markers = [];
+      this.mapBounds = new google.maps.LatLngBounds();
+    },
+    initializeGoogleMap: function() {
+      this.map = new google.maps.Map(document.getElementById('locations-map'), {
+        center: {lat: parseFloat(DEFAULT_LATITUDE), lng: parseFloat(DEFAULT_LONGITUDE)},
+        zoom: 13
+      });
+    },
+    drawLocationMarkers: function() {
+      console.log('draw markers');
+      var _this = this;
+      this.markers = this.props.locations.map(function(location) {
+        var position = new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude));
+        var marker = new google.maps.Marker({
+          position: position,
+          title: location.description,
+          map: _this.map
+        });
+        return marker;
+      });
+    },
+    recenterMap: function() {
+      var _this = this;
+      this.mapBounds = new google.maps.LatLngBounds();
+      this.markers.forEach(function(marker) {
+        _this.mapBounds.extend(marker.position);
+      });
+      this.map.fitBounds(this.mapBounds);
+      console.log('recenter map');
+    },
+    clearAllMarkers: function() {
+      this.markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      this.markers = [];
+    }
+  });
+
+  var LocationsTable = React.createClass({
+    render: function() {
+      var locations = this.props.locations;
+      var vehiclesCount = this.vehiclesCount(locations);
+      return (
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th> location </th>
+              <th> {vehiclesCount} cars available </th>
+              <th> price </th>
+            </tr>
+          </thead>
+          <LocationsTableBody locations={locations} />
+        </table>
       );
     },
     vehiclesCount: function(locations) {
