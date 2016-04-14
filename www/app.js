@@ -505,6 +505,7 @@ $(function(){
          their own event model and because reasons */
       this.markers = [];
       this.mapBounds = new google.maps.LatLngBounds();
+      this.infoWindow = new google.maps.InfoWindow();
     },
     initializeGoogleMap: function() {
       this.map = new google.maps.Map(document.getElementById('locations-map'), {
@@ -513,7 +514,6 @@ $(function(){
       });
     },
     drawLocationMarkers: function() {
-      console.log('draw markers');
       var _this = this;
       this.markers = this.props.locations.map(function(location) {
         var position = new google.maps.LatLng(parseFloat(location.latitude), parseFloat(location.longitude));
@@ -522,6 +522,12 @@ $(function(){
           title: location.description,
           map: _this.map
         });
+
+        marker.addListener('click', function() {
+          _this.infoWindow.setContent(location.description);
+          _this.infoWindow.open(_this.map, marker);
+        });
+
         return marker;
       });
     },
@@ -532,7 +538,6 @@ $(function(){
         _this.mapBounds.extend(marker.position);
       });
       this.map.fitBounds(this.mapBounds);
-      console.log('recenter map');
     },
     clearAllMarkers: function() {
       this.markers.forEach(function(marker) {
